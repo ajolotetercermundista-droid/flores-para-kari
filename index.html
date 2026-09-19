@@ -9,10 +9,11 @@
         
         body, html {
             width: 100%; height: 100%; overflow: hidden;
-            background-color: #000000; /* Negro puro */
+            background-color: #000000;
+            position: relative;
         }
 
-        /* --- FONDO DE HIERBA (Desvanecido) --- */
+        /* --- FONDO DE HIERBA --- */
         .grass-background {
             position: absolute; bottom: 0; left: 0; width: 100%; height: 40vh;
             background: linear-gradient(to top, rgba(20, 60, 20, 0.8) 0%, rgba(0, 0, 0, 0) 100%);
@@ -22,7 +23,7 @@
             0%, 100% { opacity: 0.3; } 50% { opacity: 0.8; }
         }
 
-        /* --- PARTÍCULAS AMARILLAS --- */
+        /* --- PARTÍCULAS --- */
         #particles-container {
             position: absolute; top: 0; left: 0; width: 100%; height: 100%;
             z-index: 2; pointer-events: none;
@@ -38,7 +39,7 @@
             100% { transform: translateY(-10vh) scale(1.5); opacity: 0; }
         }
 
-        /* --- VIDEO CENTRAL --- */
+        /* --- VIDEO --- */
         .video-container {
             position: absolute; top: 50%; left: 50%;
             transform: translate(-50%, -50%);
@@ -49,7 +50,7 @@
         .video-container video {
             max-width: 100%; max-height: 100%; object-fit: contain;
             border: none; outline: none; pointer-events: none; box-shadow: none;
-            mix-blend-mode: screen; /* Hace que el fondo negro del video sea transparente */
+            mix-blend-mode: screen;
         }
 
         /* --- BOTONES --- */
@@ -58,7 +59,7 @@
             background: rgba(255, 215, 0, 0.2); border: 2px solid #ffd700;
             color: #ffd700; padding: 10px 20px; border-radius: 30px;
             cursor: pointer; font-family: sans-serif; font-size: 14px;
-            z-index: 10; transition: all 0.3s ease; backdrop-filter: blur(5px);
+            z-index: 100; transition: all 0.3s ease; backdrop-filter: blur(5px);
         }
         .music-btn:hover { background: #ffd700; color: #000; box-shadow: 0 0 20px #ffd700; }
 
@@ -67,25 +68,143 @@
             background: rgba(255, 105, 180, 0.2); border: 2px solid #ff69b4;
             color: #ff69b4; padding: 10px 20px; border-radius: 30px;
             cursor: pointer; font-family: sans-serif; font-size: 14px;
-            z-index: 10; transition: all 0.3s ease; backdrop-filter: blur(5px);
+            z-index: 100; transition: all 0.3s ease; backdrop-filter: blur(5px);
         }
         .magic-btn:hover { background: #ff69b4; color: #fff; box-shadow: 0 0 20px #ff69b4; }
 
-        /* --- MAGIA (Mariposas y Corazones) --- */
+        .letter-btn {
+            position: absolute; bottom: 20px; left: 50%; transform: translateX(-50%);
+            background: rgba(0, 255, 255, 0.15); border: 2px solid #00ffff;
+            color: #00ffff; width: 50px; height: 50px; border-radius: 50%;
+            cursor: pointer; display: flex; justify-content: center; align-items: center;
+            z-index: 100; transition: all 0.3s ease; backdrop-filter: blur(5px);
+            box-shadow: 0 0 10px rgba(0, 255, 255, 0.5);
+        }
+        .letter-btn:hover { background: #00ffff; color: #000; box-shadow: 0 0 25px #00ffff; }
+        .letter-btn svg { width: 24px; height: 24px; }
+
+        /* --- ESCENA DE LA CARTA (Movida hacia abajo) --- */
+        .letter-container {
+            position: absolute; 
+            top: 65%; /* CAMBIO CLAVE: Antes era 50%, ahora baja al 65% */
+            left: 50%;
+            transform: translate(-50%, -50%) scale(0.8);
+            width: 400px; height: 300px;
+            display: flex; justify-content: center; align-items: center;
+            z-index: 50; pointer-events: none;
+            opacity: 0; visibility: hidden;
+            transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+        
+        /* Cuando se activa */
+        .letter-container.open {
+            opacity: 1; visibility: visible;
+            transform: translate(-50%, -50%) scale(1);
+            pointer-events: auto;
+        }
+
+        /* El Sobre */
+        .envelope {
+            position: relative; width: 320px; height: 220px;
+            background: linear-gradient(135deg, #ffb6c1, #ff69b4);
+            border-radius: 10px; box-shadow: 0 10px 30px rgba(255, 105, 180, 0.5);
+            transition: all 0.5s ease; z-index: 2;
+        }
+        
+        /* La solapa del sobre */
+        .envelope-flap {
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            background: #ff69b4; clip-path: polygon(0 0, 100% 0, 50% 50%);
+            transform-origin: top; transition: transform 0.6s ease 0.2s;
+            z-index: 3;
+        }
+
+        /* La Hoja de la carta */
+        .paper {
+            position: absolute; top: 20px; left: 20px; width: 280px; height: 0;
+            background: #fffaf0; border-radius: 5px; padding: 0 20px;
+            opacity: 0; overflow: hidden; z-index: 1;
+            transition: all 0.8s cubic-bezier(0.25, 0.8, 0.25, 1);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+            display: flex; flex-direction: column; justify-content: flex-start;
+        }
+
+        .paper h3 {
+            font-family: 'Dancing Script', cursive; font-size: 1.5rem; color: #d63384;
+            margin-bottom: 10px; text-align: center;
+        }
+        .paper p {
+            font-family: 'Dancing Script', cursive; font-size: 1.1rem; color: #333;
+            line-height: 1.4; margin-bottom: 15px; text-align: justify;
+        }
+        .paper .firma {
+            font-family: 'Dancing Script', cursive; font-size: 1.3rem; color: #d63384;
+            text-align: right; margin-top: 10px; font-weight: bold;
+        }
+
+        /* Flores de Minecraft (PNG) */
+        .flower {
+            position: absolute; bottom: 0; width: 120px; height: auto;
+            opacity: 0; transition: all 1s ease-out; z-index: 1; pointer-events: none;
+        }
+        .flower-left { left: -50px; transform: translateY(150px) scale(0.5); }
+        .flower-right { right: -50px; transform: translateY(150px) scale(0.5); }
+
+        /* --- ESTADOS DE LA ANIMACIÓN (Cuando se abre) --- */
+        .letter-container.open .envelope-flap {
+            transform: rotateX(180deg); z-index: 0; transition-delay: 0s;
+        }
+        .letter-container.open .paper {
+            height: 400px; opacity: 1; 
+            top: -220px; /* CAMBIO: Ajustado para que la hoja no salga tan alto */
+            padding: 20px;
+            overflow-y: auto; z-index: 4; transition-delay: 0.3s;
+        }
+        .letter-container.open .flower-left {
+            transform: translateY(-80px) scale(1.2) rotate(-10deg); opacity: 1; left: -100px;
+            animation: swayFlower 3s ease-in-out infinite 1s;
+        }
+        .letter-container.open .flower-right {
+            transform: translateY(-80px) scale(1.2) rotate(10deg); opacity: 1; right: -100px;
+            animation: swayFlower 3s ease-in-out infinite 1.5s;
+        }
+
+        /* Animación de ondulación de las flores */
+        @keyframes swayFlower {
+            0%, 100% { transform: translateY(-80px) rotate(-8deg); }
+            50% { transform: translateY(-85px) rotate(8deg); }
+        }
+
+        /* Scrollbar personalizada para la carta */
+        .paper::-webkit-scrollbar { width: 6px; }
+        .paper::-webkit-scrollbar-track { background: transparent; }
+        .paper::-webkit-scrollbar-thumb { background: #ffb6c1; border-radius: 10px; }
+
+        /* --- ESTILOS DE LA MAGIA (Mariposas y Corazones) --- */
         .magic-item {
             position: absolute;
             bottom: -60px;
-            z-index: 6;
+            z-index: 80;
             pointer-events: none;
             animation: floatUpMagic linear forwards;
             filter: drop-shadow(0 0 5px currentColor) drop-shadow(0 0 10px currentColor);
         }
-        
         @keyframes floatUpMagic {
             0% { transform: translateY(0) translateX(0) scale(0.3) rotate(0deg); opacity: 0; }
             10% { opacity: 1; }
             80% { opacity: 1; }
             100% { transform: translateY(-110vh) translateX(30px) scale(1) rotate(20deg); opacity: 0; }
+        }
+
+        @media (max-width: 600px) {
+            .letter-container { width: 90vw; top: 60%; /* En celular también baja un poco */ }
+            .envelope { width: 280px; height: 200px; }
+            .paper { width: 240px; left: 20px; }
+            .paper p { font-size: 1rem; }
+            .flower { width: 80px; }
+            .letter-container.open .paper { top: -180px; } /* Ajuste para celular */
+            .letter-container.open .flower-left { left: -60px; }
+            .letter-container.open .flower-right { right: -60px; }
         }
     </style>
 </head>
@@ -101,8 +220,33 @@
         </video>
     </div>
 
+    <!-- ESCENA DE LA CARTA -->
+    <div class="letter-container" id="letterContainer">
+        <!-- Asegúrate de que tus flores ya tengan el fondo transparente (sin cuadritos) -->
+        <img src="flor1.png" class="flower flower-left" alt="Flor Izquierda">
+        <img src="flor2.png" class="flower flower-right" alt="Flor Derecha">
+        
+        <div class="envelope">
+            <div class="envelope-flap"></div>
+            <div class="paper" id="letterPaper">
+                <h3>Querida Karime,</h3>
+                <p>Primero que nada, espero que estés teniendo un buen día, que hayas despertado con esa energía que te caracteriza, que lo que reste de tu día sea lo más maravilloso posible.</p>
+                <p>Escribo esta pequeña "carta" para recordarte lo especial que eres tanto para mi, como para todas las personas que te rodean y que forman parte de ti de alguna manera.</p>
+                <p>Quiero que sepas que todo esto lo hice por la ilusión que yo tenia de regalarte algo el 21 de septiembre, se que las cosas han cambiado y que ya no es lo mismo, se que ya no puedo darte ese regalo que tenia pensado por la situación actual pero decidí crear esta página únicamente con la intención de regalarte aunque sea algo simbólico, que al menos ese día no pase desapercibido para ti ya que te lo mereces.</p>
+                <p>Que sepas que no quiero que te sientas comprometida a nada y no tienes que hacer nada por mi, lo cree desde 0 con la mejor intención del mundo y espero que haya sido de tu agrado.</p>
+                <p class="firma">Con cariño:<br>Ojos de Tapioca :)</p>
+            </div>
+        </div>
+    </div>
+
     <!-- BOTONES -->
     <button class="magic-btn" id="magicBtn">✨ Botón Secreto ✨</button>
+    <button class="letter-btn" id="letterBtn">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="2" y="4" width="20" height="16" rx="2"></rect>
+            <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"></path>
+        </svg>
+    </button>
     <button class="music-btn" id="musicBtn">▶ Reproducir Música</button>
     
     <audio id="bgMusic" loop>
@@ -110,7 +254,7 @@
     </audio>
 
     <script>
-        // --- 1. GENERADOR DE PARTÍCULAS ---
+        // --- 1. PARTÍCULAS ---
         const particlesContainer = document.getElementById('particles-container');
         function createParticle() {
             const particle = document.createElement('div');
@@ -141,53 +285,39 @@
 
         // --- 3. MAGIA (Mariposas y Corazones) ---
         const magicBtn = document.getElementById('magicBtn');
-        
-        // Diseños en SVG (solo contorno)
         const heartSVG = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:100%; height:100%;"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path></svg>`;
-        
         const butterflySVG = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="width:100%; height:100%;"><path d="M12 8c-3-4-8-4-9 0s2 6 5 7c-3 1-5 4-3 6s6-1 7-4c1 3 5 5 7 4s1-5-3-6c3-1 5-4 5-7s-6-4-9 0z"></path><path d="M12 8v10"></path><path d="M12 8c0-2-2-3-2-3"></path><path d="M12 8c0-2 2-3 2-3"></path></svg>`;
 
         function createMagicItem() {
             const item = document.createElement('div');
             item.classList.add('magic-item');
-            
-            // Elegir aleatoriamente entre corazón y mariposa
             const isButterfly = Math.random() > 0.5;
             item.innerHTML = isButterfly ? butterflySVG : heartSVG;
-            
-            // Color fosforescente aleatorio usando HSL
             const hue = Math.floor(Math.random() * 360);
-            const color = `hsl(${hue}, 100%, 70%)`;
-            item.style.color = color;
-            
-            // Tamaño aleatorio (entre 25px y 60px)
+            item.style.color = `hsl(${hue}, 100%, 70%)`;
             const size = Math.random() * 35 + 25;
             item.style.width = `${size}px`;
             item.style.height = `${size}px`;
-            
-            // Posición inicial aleatoria en el ancho
             item.style.left = `${Math.random() * 100}vw`;
-            
-            // Duración aleatoria (entre 4 y 9 segundos)
             const duration = Math.random() * 5 + 4;
             item.style.animationDuration = `${duration}s`;
-            
             document.body.appendChild(item);
-
-            // Eliminar del DOM cuando termine la animación
-            setTimeout(() => {
-                item.remove();
-            }, duration * 1000);
+            setTimeout(() => { item.remove(); }, duration * 1000);
         }
 
-        // Evento al presionar el botón
         magicBtn.addEventListener('click', () => {
-            // Generar entre 4 y 8 figuras por clic
             const count = Math.floor(Math.random() * 5) + 4;
             for (let i = 0; i < count; i++) {
-                // Un pequeño retraso escalonado para que no salgan todas al mismo tiempo
                 setTimeout(createMagicItem, i * 150);
             }
+        });
+
+        // --- 4. CARTA (Abrir y cerrar) ---
+        const letterBtn = document.getElementById('letterBtn');
+        const letterContainer = document.getElementById('letterContainer');
+        
+        letterBtn.addEventListener('click', () => {
+            letterContainer.classList.toggle('open');
         });
     </script>
 </body>
