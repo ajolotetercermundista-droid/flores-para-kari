@@ -181,13 +181,19 @@
         }
         .polaroid-frame {
             background: #ffffff;
-            padding: 15px 15px 60px 15px;
-            border-radius: 3px;
+            padding: 20px 20px 80px 20px;
+            border-radius: 5px;
             box-shadow: 0 15px 35px rgba(0,0,0,0.6), 0 0 20px rgba(173, 216, 230, 0.3);
             display: flex; justify-content: center; align-items: center;
             transform: rotate(2deg);
         }
-        .polaroid-frame img { width: 300px; height: auto; border: 1px solid #ddd; display: block; }
+        .polaroid-frame img { 
+            width: 550px;
+            max-width: 85vw;
+            height: auto; 
+            border: 1px solid #ddd; 
+            display: block; 
+        }
 
         /* --- FLASH DE CÁMARA --- */
         .flash-overlay {
@@ -197,6 +203,115 @@
         }
         .flash-overlay.flash-active { animation: flashAnim 0.5s ease-out; }
         @keyframes flashAnim { 0% { opacity: 1; } 100% { opacity: 0; } }
+
+        /* ============================================ */
+        /* --- NUEVO: CRIATURAS FOSFORESCENTES --- */
+        /* ============================================ */
+        .creature {
+            position: fixed;
+            width: clamp(80px, 10vw, 140px);
+            height: auto;
+            pointer-events: none;
+            z-index: 5; /* Encima del video para que siempre se vean */
+            filter: drop-shadow(0 0 6px currentColor) drop-shadow(0 0 14px currentColor);
+            opacity: 0;
+        }
+        .creature svg { width: 100%; height: auto; display: block; overflow: visible; }
+        .creature.side-left { left: 0; }
+        .creature.side-right { right: 0; }
+        /* Para que miren hacia dentro de la pantalla */
+        .creature.side-right svg { transform: scaleX(-1); }
+
+        /* === AJOLOTE (Rosa fosforescente) === */
+        .creature.axolotl { color: #ff69b4; width: clamp(100px, 12vw, 160px); }
+        .creature.axolotl.side-left { animation: swimLeft 10s ease-in-out forwards; }
+        .creature.axolotl.side-right { animation: swimRight 10s ease-in-out forwards; }
+
+        @keyframes swimLeft {
+            0% { transform: translateX(-15vw) translateY(0) rotate(-3deg); opacity: 0; }
+            12% { transform: translateX(0) translateY(-20px) rotate(3deg); opacity: 1; }
+            30% { transform: translateX(6vw) translateY(-50px) rotate(-3deg); opacity: 1; }
+            50% { transform: translateX(8vw) translateY(0) rotate(3deg); opacity: 1; }
+            70% { transform: translateX(5vw) translateY(40px) rotate(-3deg); opacity: 1; }
+            88% { transform: translateX(0) translateY(20px) rotate(0deg); opacity: 1; }
+            100% { transform: translateX(-15vw) translateY(0) rotate(3deg); opacity: 0; }
+        }
+        @keyframes swimRight {
+            0% { transform: translateX(15vw) translateY(0) rotate(3deg); opacity: 0; }
+            12% { transform: translateX(0) translateY(-20px) rotate(-3deg); opacity: 1; }
+            30% { transform: translateX(-6vw) translateY(-50px) rotate(3deg); opacity: 1; }
+            50% { transform: translateX(-8vw) translateY(0) rotate(-3deg); opacity: 1; }
+            70% { transform: translateX(-5vw) translateY(40px) rotate(3deg); opacity: 1; }
+            88% { transform: translateX(0) translateY(20px) rotate(0deg); opacity: 1; }
+            100% { transform: translateX(15vw) translateY(0) rotate(-3deg); opacity: 0; }
+        }
+
+        /* === CONEJO (Lila fosforescente) === */
+        .creature.rabbit { color: #dda0dd; width: clamp(70px, 8vw, 110px); }
+        .creature.rabbit.side-left { animation: hopLeft 9s ease-in-out forwards; }
+        .creature.rabbit.side-right { animation: hopRight 9s ease-in-out forwards; }
+
+        @keyframes hopLeft {
+            0% { transform: translateX(-12vw) translateY(0); opacity: 0; }
+            8% { opacity: 1; }
+            18% { transform: translateX(0) translateY(-50px); }
+            28% { transform: translateX(3vw) translateY(0); }
+            38% { transform: translateX(5vw) translateY(-50px); }
+            48% { transform: translateX(7vw) translateY(0); }
+            58% { transform: translateX(5vw) translateY(-50px); }
+            68% { transform: translateX(3vw) translateY(0); }
+            78% { transform: translateX(0) translateY(-50px); }
+            90% { transform: translateX(-4vw) translateY(0); opacity: 1; }
+            100% { transform: translateX(-12vw) translateY(0); opacity: 0; }
+        }
+        @keyframes hopRight {
+            0% { transform: translateX(12vw) translateY(0); opacity: 0; }
+            8% { opacity: 1; }
+            18% { transform: translateX(0) translateY(-50px); }
+            28% { transform: translateX(-3vw) translateY(0); }
+            38% { transform: translateX(-5vw) translateY(-50px); }
+            48% { transform: translateX(-7vw) translateY(0); }
+            58% { transform: translateX(-5vw) translateY(-50px); }
+            68% { transform: translateX(-3vw) translateY(0); }
+            78% { transform: translateX(0) translateY(-50px); }
+            90% { transform: translateX(4vw) translateY(0); opacity: 1; }
+            100% { transform: translateX(12vw) translateY(0); opacity: 0; }
+        }
+
+        /* === LIBÉLULA (Cyan fosforescente) === */
+        .creature.dragonfly { color: #00ffff; width: clamp(50px, 6vw, 90px); }
+        .creature.dragonfly.side-left { animation: flyLeft 7s linear forwards; }
+        .creature.dragonfly.side-right { animation: flyRight 7s linear forwards; }
+
+        @keyframes flyLeft {
+            0% { transform: translate(-15vw, 0) rotate(-15deg); opacity: 0; }
+            10% { opacity: 1; }
+            25% { transform: translate(4vw, -80px) rotate(20deg); }
+            45% { transform: translate(7vw, 60px) rotate(-15deg); }
+            65% { transform: translate(4vw, -40px) rotate(15deg); }
+            85% { transform: translate(2vw, 30px) rotate(-10deg); opacity: 1; }
+            100% { transform: translate(-15vw, 0) rotate(0deg); opacity: 0; }
+        }
+        @keyframes flyRight {
+            0% { transform: translate(15vw, 0) rotate(15deg); opacity: 0; }
+            10% { opacity: 1; }
+            25% { transform: translate(-4vw, -80px) rotate(-20deg); }
+            45% { transform: translate(-7vw, 60px) rotate(15deg); }
+            65% { transform: translate(-4vw, -40px) rotate(-15deg); }
+            85% { transform: translate(-2vw, 30px) rotate(10deg); opacity: 1; }
+            100% { transform: translate(15vw, 0) rotate(0deg); opacity: 0; }
+        }
+
+        /* Aleteo de la libélula */
+        .creature.dragonfly .wings {
+            transform-box: fill-box;
+            transform-origin: center;
+            animation: wingFlap 0.18s ease-in-out infinite;
+        }
+        @keyframes wingFlap {
+            0%, 100% { transform: scaleY(1); }
+            50% { transform: scaleY(0.55); }
+        }
 
         @media (max-width: 600px) {
             .letter-container { width: 90vw; top: 60%; }
@@ -208,7 +323,7 @@
             .letter-container.open .flower-left { left: -60px; }
             .letter-container.open .flower-right { right: -60px; }
             .camera-btn { top: 10px; right: 10px; width: 45px; height: 45px; }
-            .polaroid-frame img { width: 220px; }
+            .polaroid-frame img { width: 85vw; }
         }
     </style>
 </head>
@@ -267,8 +382,8 @@
     </button>
     <button class="music-btn" id="musicBtn">▶ Reproducir Música</button>
     
-    <!-- AUDIO DE FONDO (Con atributo autoplay) -->
-    <audio id="bgMusic" loop autoplay>
+    <!-- AUDIO DE FONDO -->
+    <audio id="bgMusic" loop>
         <source src="cancion.mp3" type="audio/mpeg">
     </audio>
 
@@ -295,44 +410,37 @@
         }
         setInterval(createParticle, 300);
 
-        // --- 2. MÚSICA (AUTOPLAY CON FALLBACK) ---
+        // --- 2. MÚSICA ---
         const musicBtn = document.getElementById('musicBtn');
         const bgMusic = document.getElementById('bgMusic');
         let isPlaying = false;
 
-        // Función para actualizar el botón
         function updateMusicUI(playing) {
             isPlaying = playing;
             musicBtn.textContent = playing ? '⏸ Pausar Música' : '▶ Reproducir Música';
         }
 
-        // Intentar reproducir automáticamente al cargar
-        const playPromise = bgMusic.play();
-
-        if (playPromise !== undefined) {
-            playPromise.then(() => {
-                // Autoplay funcionó perfectamente
+        function tryPlayMusic() {
+            bgMusic.play().then(() => {
                 updateMusicUI(true);
-            }).catch(() => {
-                // Autoplay fue bloqueado por el navegador
+            }).catch((error) => {
                 updateMusicUI(false);
-                
-                // TRUCO: Reproducir en el primer clic o toque en cualquier parte de la pantalla
-                const startAudioOnFirstInteraction = () => {
-                    bgMusic.play().then(() => updateMusicUI(true)).catch(e => console.log("Aún bloqueado:", e));
-                };
-                
-                // Se ejecuta una sola vez, en el primer clic o toque
-                document.addEventListener('click', startAudioOnFirstInteraction, { once: true });
-                document.addEventListener('touchstart', startAudioOnFirstInteraction, { once: true });
             });
         }
 
-        // Control manual del botón (Pausar / Reproducir)
-        musicBtn.addEventListener('click', (e) => {
-            e.stopPropagation(); // Evita conflictos con el evento global
+        tryPlayMusic();
+
+        document.addEventListener('click', function playOnFirstClick() {
             if (bgMusic.paused) {
-                bgMusic.play().then(() => updateMusicUI(true));
+                tryPlayMusic();
+            }
+            document.removeEventListener('click', playOnFirstClick);
+        }, { once: true });
+
+        musicBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            if (bgMusic.paused) {
+                tryPlayMusic();
             } else {
                 bgMusic.pause();
                 updateMusicUI(false);
@@ -368,7 +476,7 @@
             }
         });
 
-        // --- 4. CARTA (Abrir y cerrar) ---
+        // --- 4. CARTA ---
         const letterBtn = document.getElementById('letterBtn');
         const letterContainer = document.getElementById('letterContainer');
         
@@ -376,7 +484,7 @@
             letterContainer.classList.toggle('open');
         });
 
-        // --- 5. CÁMARA (Foto, Flash y Sonido) ---
+        // --- 5. CÁMARA ---
         const cameraBtn = document.getElementById('cameraBtn');
         const photoContainer = document.getElementById('photoContainer');
         const cameraAudio = document.getElementById('cameraAudio');
@@ -401,6 +509,113 @@
                 isPhotoOpen = false;
             }
         });
+
+        // ============================================
+        // --- 6. NUEVO: CRIATURAS EN LOS LATERALES ---
+        // ============================================
+
+        // SVGs de las criaturas (solo contorno)
+        const axolotlSVG = `
+        <svg viewBox="0 0 100 60" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <!-- Cuerpo -->
+            <path d="M 25 32 Q 45 18 68 22 Q 82 24 88 32 Q 82 42 68 44 Q 45 48 25 36"/>
+            <!-- Cabeza -->
+            <ellipse cx="82" cy="33" rx="14" ry="12"/>
+            <!-- Branquias (3 a cada lado) -->
+            <path d="M 76 22 Q 68 10 60 8"/>
+            <path d="M 79 21 Q 74 7 68 3"/>
+            <path d="M 83 21 Q 82 6 84 2"/>
+            <!-- Ojo -->
+            <circle cx="88" cy="30" r="2.5" fill="currentColor" stroke="none"/>
+            <!-- Sonrisa -->
+            <path d="M 90 40 Q 93 42 95 40"/>
+            <!-- Cola -->
+            <path d="M 25 32 Q 12 22 2 26 Q 8 33 2 42 Q 12 46 25 36"/>
+            <!-- Patitas -->
+            <path d="M 42 42 L 38 52 L 46 52"/>
+            <path d="M 68 43 L 65 52 L 73 52"/>
+        </svg>`;
+
+        const rabbitSVG = `
+        <svg viewBox="0 0 80 80" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <!-- Cuerpo -->
+            <ellipse cx="35" cy="55" rx="22" ry="16"/>
+            <!-- Cabeza -->
+            <circle cx="52" cy="38" r="13"/>
+            <!-- Orejas -->
+            <path d="M 46 28 Q 42 8 46 4 Q 50 8 50 28"/>
+            <path d="M 54 28 Q 52 8 56 4 Q 60 8 58 28"/>
+            <!-- Ojo -->
+            <circle cx="56" cy="36" r="1.8" fill="currentColor" stroke="none"/>
+            <!-- Nariz -->
+            <circle cx="64" cy="40" r="1.5" fill="currentColor" stroke="none"/>
+            <!-- Bigotes -->
+            <path d="M 64 42 L 72 44"/>
+            <path d="M 64 40 L 72 40"/>
+            <!-- Colita -->
+            <circle cx="15" cy="52" r="6"/>
+            <!-- Patitas -->
+            <path d="M 45 68 L 45 76 L 38 76"/>
+            <path d="M 28 68 L 28 76 L 21 76"/>
+        </svg>`;
+
+        const dragonflySVG = `
+        <svg viewBox="0 0 100 60" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+            <!-- Cuerpo largo -->
+            <line x1="15" y1="30" x2="85" y2="30"/>
+            <!-- Cabeza -->
+            <circle cx="15" cy="30" r="4"/>
+            <!-- Ojitos -->
+            <circle cx="13" cy="28" r="1" fill="currentColor" stroke="none"/>
+            <circle cx="13" cy="32" r="1" fill="currentColor" stroke="none"/>
+            <!-- Alas (grupo animado) -->
+            <g class="wings">
+                <path d="M 35 30 Q 40 10 55 5 Q 52 20 48 30"/>
+                <path d="M 55 30 Q 60 10 75 5 Q 72 20 68 30"/>
+                <path d="M 35 30 Q 40 50 55 55 Q 52 40 48 30"/>
+                <path d="M 55 30 Q 60 50 75 55 Q 72 40 68 30"/>
+            </g>
+        </svg>`;
+
+        const creatureSVGs = {
+            axolotl: axolotlSVG,
+            rabbit: rabbitSVG,
+            dragonfly: dragonflySVG
+        };
+        const creatureTypes = ['axolotl', 'rabbit', 'dragonfly'];
+
+        function spawnCreature() {
+            const type = creatureTypes[Math.floor(Math.random() * creatureTypes.length)];
+            const side = Math.random() < 0.5 ? 'left' : 'right';
+            const top = 15 + Math.random() * 65; // Entre 15% y 80% de la altura
+
+            const el = document.createElement('div');
+            el.className = `creature ${type} side-${side}`;
+            el.style.top = top + '%';
+            el.innerHTML = creatureSVGs[type];
+
+            document.body.appendChild(el);
+
+            // Duración de la animación + pequeño extra para eliminar del DOM
+            const animDuration = parseFloat(getComputedStyle(el).animationDuration) * 1000;
+            setTimeout(() => el.remove(), animDuration + 800);
+        }
+
+        // Programador de aparición aleatoria
+        function scheduleNextSpawn() {
+            // Aparece entre cada 4 y 9 segundos
+            const nextIn = 4000 + Math.random() * 5000;
+            setTimeout(() => {
+                spawnCreature();
+                scheduleNextSpawn();
+            }, nextIn);
+        }
+
+        // Primera criatura aparece a los 3 segundos de entrar a la página
+        setTimeout(() => {
+            spawnCreature();
+            scheduleNextSpawn();
+        }, 3000);
     </script>
 </body>
 </html>
