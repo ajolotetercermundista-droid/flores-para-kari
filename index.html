@@ -83,7 +83,7 @@
         .letter-btn:hover { background: #00ffff; color: #000; box-shadow: 0 0 25px #00ffff; }
         .letter-btn svg { width: 24px; height: 24px; }
 
-        /* --- NUEVO BOTÓN DE CÁMARA (Esquina Superior Derecha) --- */
+        /* --- BOTÓN DE CÁMARA --- */
         .camera-btn {
             position: absolute; top: 20px; right: 20px;
             background: rgba(173, 216, 230, 0.15); border: 2px solid #add8e6;
@@ -165,57 +165,38 @@
             100% { transform: translateY(-110vh) translateX(30px) scale(1) rotate(20deg); opacity: 0; }
         }
 
-        /* --- NUEVO: ESTILOS DE LA FOTO (Retrato) --- */
+        /* --- ESTILOS DE LA FOTO --- */
         .photo-container {
             position: absolute; top: 50%; left: 50%;
-            transform: translate(-50%, -100vh); /* Empieza arriba de la pantalla */
+            transform: translate(-50%, -100vh);
             opacity: 0; visibility: hidden;
-            z-index: 90; /* Por encima del video, debajo de los botones */
+            z-index: 90;
             pointer-events: none;
             transition: all 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275);
         }
-
         .photo-container.active {
-            transform: translate(-50%, -50%); /* Cae al centro */
+            transform: translate(-50%, -50%);
             opacity: 1; visibility: visible;
-            pointer-events: auto; /* Permite interactuar si es necesario */
+            pointer-events: auto;
         }
-
-        /* Estilo de fotografía antigua (Polaroid) */
         .polaroid-frame {
             background: #ffffff;
-            padding: 15px 15px 60px 15px; /* Espacio extra abajo tipo Polaroid */
+            padding: 15px 15px 60px 15px;
             border-radius: 3px;
-            box-shadow: 0 15px 35px rgba(0,0,0,0.6), 0 0 20px rgba(173, 216, 230, 0.3); /* Sombra y brillo azul */
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            transform: rotate(2deg); /* Un pequeño giro para que se vea natural */
+            box-shadow: 0 15px 35px rgba(0,0,0,0.6), 0 0 20px rgba(173, 216, 230, 0.3);
+            display: flex; justify-content: center; align-items: center;
+            transform: rotate(2deg);
         }
+        .polaroid-frame img { width: 300px; height: auto; border: 1px solid #ddd; display: block; }
 
-        .polaroid-frame img {
-            width: 300px;
-            height: auto;
-            border: 1px solid #ddd;
-            display: block;
-        }
-
-        /* --- NUEVO: FLASH DE CÁMARA --- */
+        /* --- FLASH DE CÁMARA --- */
         .flash-overlay {
             position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
             background-color: #ffffff;
-            opacity: 0; z-index: 9999; /* Por encima de todo */
-            pointer-events: none;
+            opacity: 0; z-index: 9999; pointer-events: none;
         }
-
-        .flash-overlay.flash-active {
-            animation: flashAnim 0.5s ease-out;
-        }
-
-        @keyframes flashAnim {
-            0% { opacity: 1; }
-            100% { opacity: 0; }
-        }
+        .flash-overlay.flash-active { animation: flashAnim 0.5s ease-out; }
+        @keyframes flashAnim { 0% { opacity: 1; } 100% { opacity: 0; } }
 
         @media (max-width: 600px) {
             .letter-container { width: 90vw; top: 60%; }
@@ -235,7 +216,7 @@
 
     <div class="grass-background"></div>
     <div id="particles-container"></div>
-    <div class="flash-overlay" id="flashOverlay"></div> <!-- Capa del Flash -->
+    <div class="flash-overlay" id="flashOverlay"></div>
 
     <!-- VIDEO CENTRAL -->
     <div class="video-container">
@@ -244,10 +225,9 @@
         </video>
     </div>
 
-    <!-- NUEVO: FOTO / RETRATO -->
+    <!-- FOTO / RETRATO -->
     <div class="photo-container" id="photoContainer">
         <div class="polaroid-frame">
-            <!-- Asegúrate de que tu imagen se llame retrato.png -->
             <img src="retrato.png" alt="Retrato">
         </div>
     </div>
@@ -287,12 +267,12 @@
     </button>
     <button class="music-btn" id="musicBtn">▶ Reproducir Música</button>
     
-    <audio id="bgMusic" loop>
+    <!-- AUDIO DE FONDO (Con atributo autoplay) -->
+    <audio id="bgMusic" loop autoplay>
         <source src="cancion.mp3" type="audio/mpeg">
     </audio>
 
-    <!-- NUEVO: AUDIO DE LA CÁMARA -->
-    <!-- Asegúrate de que tu audio se llame camara.mp3 -->
+    <!-- AUDIO DE LA CÁMARA -->
     <audio id="cameraAudio">
         <source src="camara.mp3" type="audio/mpeg">
     </audio>
@@ -315,15 +295,47 @@
         }
         setInterval(createParticle, 300);
 
-        // --- 2. MÚSICA ---
+        // --- 2. MÚSICA (AUTOPLAY CON FALLBACK) ---
         const musicBtn = document.getElementById('musicBtn');
         const bgMusic = document.getElementById('bgMusic');
         let isPlaying = false;
-        musicBtn.addEventListener('click', () => {
-            if (!isPlaying) {
-                bgMusic.play(); musicBtn.textContent = '⏸ Pausar Música'; isPlaying = true;
+
+        // Función para actualizar el botón
+        function updateMusicUI(playing) {
+            isPlaying = playing;
+            musicBtn.textContent = playing ? '⏸ Pausar Música' : '▶ Reproducir Música';
+        }
+
+        // Intentar reproducir automáticamente al cargar
+        const playPromise = bgMusic.play();
+
+        if (playPromise !== undefined) {
+            playPromise.then(() => {
+                // Autoplay funcionó perfectamente
+                updateMusicUI(true);
+            }).catch(() => {
+                // Autoplay fue bloqueado por el navegador
+                updateMusicUI(false);
+                
+                // TRUCO: Reproducir en el primer clic o toque en cualquier parte de la pantalla
+                const startAudioOnFirstInteraction = () => {
+                    bgMusic.play().then(() => updateMusicUI(true)).catch(e => console.log("Aún bloqueado:", e));
+                };
+                
+                // Se ejecuta una sola vez, en el primer clic o toque
+                document.addEventListener('click', startAudioOnFirstInteraction, { once: true });
+                document.addEventListener('touchstart', startAudioOnFirstInteraction, { once: true });
+            });
+        }
+
+        // Control manual del botón (Pausar / Reproducir)
+        musicBtn.addEventListener('click', (e) => {
+            e.stopPropagation(); // Evita conflictos con el evento global
+            if (bgMusic.paused) {
+                bgMusic.play().then(() => updateMusicUI(true));
             } else {
-                bgMusic.pause(); musicBtn.textContent = '▶ Reproducir Música'; isPlaying = false;
+                bgMusic.pause();
+                updateMusicUI(false);
             }
         });
 
@@ -364,7 +376,7 @@
             letterContainer.classList.toggle('open');
         });
 
-        // --- 5. NUEVO: CÁMARA (Foto, Flash y Sonido) ---
+        // --- 5. CÁMARA (Foto, Flash y Sonido) ---
         const cameraBtn = document.getElementById('cameraBtn');
         const photoContainer = document.getElementById('photoContainer');
         const cameraAudio = document.getElementById('cameraAudio');
@@ -373,22 +385,18 @@
 
         cameraBtn.addEventListener('click', () => {
             if (!isPhotoOpen) {
-                // Abriendo: Mostrar foto, reproducir sonido y lanzar flash
                 photoContainer.classList.add('active');
                 
-                // Reproducir sonido de cámara
-                cameraAudio.currentTime = 0; // Reiniciar por si se presiona rápido
-                cameraAudio.play().catch(e => console.log("Audio no reproducido aún:", e));
+                cameraAudio.currentTime = 0;
+                cameraAudio.play().catch(e => console.log("Audio cámara bloqueado:", e));
                 
-                // Animación del Flash
                 flashOverlay.classList.add('flash-active');
                 setTimeout(() => {
                     flashOverlay.classList.remove('flash-active');
-                }, 500); // El flash dura medio segundo
+                }, 500);
                 
                 isPhotoOpen = true;
             } else {
-                // Cerrando: Ocultar foto (sin sonido ni flash)
                 photoContainer.classList.remove('active');
                 isPhotoOpen = false;
             }
