@@ -83,10 +83,22 @@
         .letter-btn:hover { background: #00ffff; color: #000; box-shadow: 0 0 25px #00ffff; }
         .letter-btn svg { width: 24px; height: 24px; }
 
-        /* --- ESCENA DE LA CARTA (Movida hacia abajo) --- */
+        /* --- NUEVO BOTÓN DE CÁMARA (Esquina Superior Derecha) --- */
+        .camera-btn {
+            position: absolute; top: 20px; right: 20px;
+            background: rgba(173, 216, 230, 0.15); border: 2px solid #add8e6;
+            color: #add8e6; width: 50px; height: 50px; border-radius: 50%;
+            cursor: pointer; display: flex; justify-content: center; align-items: center;
+            z-index: 100; transition: all 0.3s ease; backdrop-filter: blur(5px);
+            box-shadow: 0 0 10px rgba(173, 216, 230, 0.5);
+        }
+        .camera-btn:hover { background: #add8e6; color: #000; box-shadow: 0 0 25px #add8e6; }
+        .camera-btn svg { width: 26px; height: 26px; }
+
+        /* --- ESCENA DE LA CARTA --- */
         .letter-container {
             position: absolute; 
-            top: 65%; /* CAMBIO CLAVE: Antes era 50%, ahora baja al 65% */
+            top: 65%;
             left: 50%;
             transform: translate(-50%, -50%) scale(0.8);
             width: 400px; height: 300px;
@@ -95,31 +107,23 @@
             opacity: 0; visibility: hidden;
             transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
         }
-        
-        /* Cuando se activa */
         .letter-container.open {
             opacity: 1; visibility: visible;
             transform: translate(-50%, -50%) scale(1);
             pointer-events: auto;
         }
-
-        /* El Sobre */
         .envelope {
             position: relative; width: 320px; height: 220px;
             background: linear-gradient(135deg, #ffb6c1, #ff69b4);
             border-radius: 10px; box-shadow: 0 10px 30px rgba(255, 105, 180, 0.5);
             transition: all 0.5s ease; z-index: 2;
         }
-        
-        /* La solapa del sobre */
         .envelope-flap {
             position: absolute; top: 0; left: 0; width: 100%; height: 100%;
             background: #ff69b4; clip-path: polygon(0 0, 100% 0, 50% 50%);
             transform-origin: top; transition: transform 0.6s ease 0.2s;
             z-index: 3;
         }
-
-        /* La Hoja de la carta */
         .paper {
             position: absolute; top: 20px; left: 20px; width: 280px; height: 0;
             background: #fffaf0; border-radius: 5px; padding: 0 20px;
@@ -128,83 +132,102 @@
             box-shadow: 0 5px 15px rgba(0,0,0,0.3);
             display: flex; flex-direction: column; justify-content: flex-start;
         }
+        .paper h3 { font-family: 'Dancing Script', cursive; font-size: 1.5rem; color: #d63384; margin-bottom: 10px; text-align: center; }
+        .paper p { font-family: 'Dancing Script', cursive; font-size: 1.1rem; color: #333; line-height: 1.4; margin-bottom: 15px; text-align: justify; }
+        .paper .firma { font-family: 'Dancing Script', cursive; font-size: 1.3rem; color: #d63384; text-align: right; margin-top: 10px; font-weight: bold; }
 
-        .paper h3 {
-            font-family: 'Dancing Script', cursive; font-size: 1.5rem; color: #d63384;
-            margin-bottom: 10px; text-align: center;
-        }
-        .paper p {
-            font-family: 'Dancing Script', cursive; font-size: 1.1rem; color: #333;
-            line-height: 1.4; margin-bottom: 15px; text-align: justify;
-        }
-        .paper .firma {
-            font-family: 'Dancing Script', cursive; font-size: 1.3rem; color: #d63384;
-            text-align: right; margin-top: 10px; font-weight: bold;
-        }
-
-        /* Flores de Minecraft (PNG) */
-        .flower {
-            position: absolute; bottom: 0; width: 120px; height: auto;
-            opacity: 0; transition: all 1s ease-out; z-index: 1; pointer-events: none;
-        }
+        .flower { position: absolute; bottom: 0; width: 120px; height: auto; opacity: 0; transition: all 1s ease-out; z-index: 1; pointer-events: none; }
         .flower-left { left: -50px; transform: translateY(150px) scale(0.5); }
         .flower-right { right: -50px; transform: translateY(150px) scale(0.5); }
 
-        /* --- ESTADOS DE LA ANIMACIÓN (Cuando se abre) --- */
-        .letter-container.open .envelope-flap {
-            transform: rotateX(180deg); z-index: 0; transition-delay: 0s;
-        }
-        .letter-container.open .paper {
-            height: 400px; opacity: 1; 
-            top: -220px; /* CAMBIO: Ajustado para que la hoja no salga tan alto */
-            padding: 20px;
-            overflow-y: auto; z-index: 4; transition-delay: 0.3s;
-        }
-        .letter-container.open .flower-left {
-            transform: translateY(-80px) scale(1.2) rotate(-10deg); opacity: 1; left: -100px;
-            animation: swayFlower 3s ease-in-out infinite 1s;
-        }
-        .letter-container.open .flower-right {
-            transform: translateY(-80px) scale(1.2) rotate(10deg); opacity: 1; right: -100px;
-            animation: swayFlower 3s ease-in-out infinite 1.5s;
-        }
+        .letter-container.open .envelope-flap { transform: rotateX(180deg); z-index: 0; transition-delay: 0s; }
+        .letter-container.open .paper { height: 400px; opacity: 1; top: -220px; padding: 20px; overflow-y: auto; z-index: 4; transition-delay: 0.3s; }
+        .letter-container.open .flower-left { transform: translateY(-80px) scale(1.2) rotate(-10deg); opacity: 1; left: -100px; animation: swayFlower 3s ease-in-out infinite 1s; }
+        .letter-container.open .flower-right { transform: translateY(-80px) scale(1.2) rotate(10deg); opacity: 1; right: -100px; animation: swayFlower 3s ease-in-out infinite 1.5s; }
 
-        /* Animación de ondulación de las flores */
         @keyframes swayFlower {
             0%, 100% { transform: translateY(-80px) rotate(-8deg); }
             50% { transform: translateY(-85px) rotate(8deg); }
         }
-
-        /* Scrollbar personalizada para la carta */
         .paper::-webkit-scrollbar { width: 6px; }
         .paper::-webkit-scrollbar-track { background: transparent; }
         .paper::-webkit-scrollbar-thumb { background: #ffb6c1; border-radius: 10px; }
 
-        /* --- ESTILOS DE LA MAGIA (Mariposas y Corazones) --- */
+        /* --- ESTILOS DE LA MAGIA --- */
         .magic-item {
-            position: absolute;
-            bottom: -60px;
-            z-index: 80;
-            pointer-events: none;
+            position: absolute; bottom: -60px; z-index: 80; pointer-events: none;
             animation: floatUpMagic linear forwards;
             filter: drop-shadow(0 0 5px currentColor) drop-shadow(0 0 10px currentColor);
         }
         @keyframes floatUpMagic {
             0% { transform: translateY(0) translateX(0) scale(0.3) rotate(0deg); opacity: 0; }
-            10% { opacity: 1; }
-            80% { opacity: 1; }
+            10% { opacity: 1; } 80% { opacity: 1; }
             100% { transform: translateY(-110vh) translateX(30px) scale(1) rotate(20deg); opacity: 0; }
         }
 
+        /* --- NUEVO: ESTILOS DE LA FOTO (Retrato) --- */
+        .photo-container {
+            position: absolute; top: 50%; left: 50%;
+            transform: translate(-50%, -100vh); /* Empieza arriba de la pantalla */
+            opacity: 0; visibility: hidden;
+            z-index: 90; /* Por encima del video, debajo de los botones */
+            pointer-events: none;
+            transition: all 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        .photo-container.active {
+            transform: translate(-50%, -50%); /* Cae al centro */
+            opacity: 1; visibility: visible;
+            pointer-events: auto; /* Permite interactuar si es necesario */
+        }
+
+        /* Estilo de fotografía antigua (Polaroid) */
+        .polaroid-frame {
+            background: #ffffff;
+            padding: 15px 15px 60px 15px; /* Espacio extra abajo tipo Polaroid */
+            border-radius: 3px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.6), 0 0 20px rgba(173, 216, 230, 0.3); /* Sombra y brillo azul */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            transform: rotate(2deg); /* Un pequeño giro para que se vea natural */
+        }
+
+        .polaroid-frame img {
+            width: 300px;
+            height: auto;
+            border: 1px solid #ddd;
+            display: block;
+        }
+
+        /* --- NUEVO: FLASH DE CÁMARA --- */
+        .flash-overlay {
+            position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
+            background-color: #ffffff;
+            opacity: 0; z-index: 9999; /* Por encima de todo */
+            pointer-events: none;
+        }
+
+        .flash-overlay.flash-active {
+            animation: flashAnim 0.5s ease-out;
+        }
+
+        @keyframes flashAnim {
+            0% { opacity: 1; }
+            100% { opacity: 0; }
+        }
+
         @media (max-width: 600px) {
-            .letter-container { width: 90vw; top: 60%; /* En celular también baja un poco */ }
+            .letter-container { width: 90vw; top: 60%; }
             .envelope { width: 280px; height: 200px; }
             .paper { width: 240px; left: 20px; }
             .paper p { font-size: 1rem; }
             .flower { width: 80px; }
-            .letter-container.open .paper { top: -180px; } /* Ajuste para celular */
+            .letter-container.open .paper { top: -180px; }
             .letter-container.open .flower-left { left: -60px; }
             .letter-container.open .flower-right { right: -60px; }
+            .camera-btn { top: 10px; right: 10px; width: 45px; height: 45px; }
+            .polaroid-frame img { width: 220px; }
         }
     </style>
 </head>
@@ -212,6 +235,7 @@
 
     <div class="grass-background"></div>
     <div id="particles-container"></div>
+    <div class="flash-overlay" id="flashOverlay"></div> <!-- Capa del Flash -->
 
     <!-- VIDEO CENTRAL -->
     <div class="video-container">
@@ -220,9 +244,16 @@
         </video>
     </div>
 
+    <!-- NUEVO: FOTO / RETRATO -->
+    <div class="photo-container" id="photoContainer">
+        <div class="polaroid-frame">
+            <!-- Asegúrate de que tu imagen se llame retrato.png -->
+            <img src="retrato.png" alt="Retrato">
+        </div>
+    </div>
+
     <!-- ESCENA DE LA CARTA -->
     <div class="letter-container" id="letterContainer">
-        <!-- Asegúrate de que tus flores ya tengan el fondo transparente (sin cuadritos) -->
         <img src="flor1.png" class="flower flower-left" alt="Flor Izquierda">
         <img src="flor2.png" class="flower flower-right" alt="Flor Derecha">
         
@@ -240,6 +271,13 @@
     </div>
 
     <!-- BOTONES -->
+    <button class="camera-btn" id="cameraBtn">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"></path>
+            <circle cx="12" cy="13" r="4"></circle>
+        </svg>
+    </button>
+    
     <button class="magic-btn" id="magicBtn">✨ Botón Secreto ✨</button>
     <button class="letter-btn" id="letterBtn">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -251,6 +289,12 @@
     
     <audio id="bgMusic" loop>
         <source src="cancion.mp3" type="audio/mpeg">
+    </audio>
+
+    <!-- NUEVO: AUDIO DE LA CÁMARA -->
+    <!-- Asegúrate de que tu audio se llame camara.mp3 -->
+    <audio id="cameraAudio">
+        <source src="camara.mp3" type="audio/mpeg">
     </audio>
 
     <script>
@@ -318,6 +362,36 @@
         
         letterBtn.addEventListener('click', () => {
             letterContainer.classList.toggle('open');
+        });
+
+        // --- 5. NUEVO: CÁMARA (Foto, Flash y Sonido) ---
+        const cameraBtn = document.getElementById('cameraBtn');
+        const photoContainer = document.getElementById('photoContainer');
+        const cameraAudio = document.getElementById('cameraAudio');
+        const flashOverlay = document.getElementById('flashOverlay');
+        let isPhotoOpen = false;
+
+        cameraBtn.addEventListener('click', () => {
+            if (!isPhotoOpen) {
+                // Abriendo: Mostrar foto, reproducir sonido y lanzar flash
+                photoContainer.classList.add('active');
+                
+                // Reproducir sonido de cámara
+                cameraAudio.currentTime = 0; // Reiniciar por si se presiona rápido
+                cameraAudio.play().catch(e => console.log("Audio no reproducido aún:", e));
+                
+                // Animación del Flash
+                flashOverlay.classList.add('flash-active');
+                setTimeout(() => {
+                    flashOverlay.classList.remove('flash-active');
+                }, 500); // El flash dura medio segundo
+                
+                isPhotoOpen = true;
+            } else {
+                // Cerrando: Ocultar foto (sin sonido ni flash)
+                photoContainer.classList.remove('active');
+                isPhotoOpen = false;
+            }
         });
     </script>
 </body>
