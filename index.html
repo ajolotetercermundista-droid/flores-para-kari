@@ -205,21 +205,20 @@
         @keyframes flashAnim { 0% { opacity: 1; } 100% { opacity: 0; } }
 
         /* ============================================ */
-        /* --- NUEVO: CRIATURAS FOSFORESCENTES --- */
+        /* --- CRIATURAS FOSFORESCENTES --- */
         /* ============================================ */
         .creature {
             position: fixed;
             width: clamp(80px, 10vw, 140px);
             height: auto;
             pointer-events: none;
-            z-index: 5; /* Encima del video para que siempre se vean */
+            z-index: 5;
             filter: drop-shadow(0 0 6px currentColor) drop-shadow(0 0 14px currentColor);
             opacity: 0;
         }
         .creature svg { width: 100%; height: auto; display: block; overflow: visible; }
         .creature.side-left { left: 0; }
         .creature.side-right { right: 0; }
-        /* Para que miren hacia dentro de la pantalla */
         .creature.side-right svg { transform: scaleX(-1); }
 
         /* === AJOLOTE (Rosa fosforescente) === */
@@ -302,7 +301,6 @@
             100% { transform: translate(15vw, 0) rotate(0deg); opacity: 0; }
         }
 
-        /* Aleteo de la libélula */
         .creature.dragonfly .wings {
             transform-box: fill-box;
             transform-origin: center;
@@ -360,6 +358,7 @@
                 <p>Escribo esta pequeña "carta" para recordarte lo especial que eres tanto para mi, como para todas las personas que te rodean y que forman parte de ti de alguna manera.</p>
                 <p>Quiero que sepas que todo esto lo hice por la ilusión que yo tenia de regalarte algo el 21 de septiembre, se que las cosas han cambiado y que ya no es lo mismo, se que ya no puedo darte ese regalo que tenia pensado por la situación actual pero decidí crear esta página únicamente con la intención de regalarte aunque sea algo simbólico, que al menos ese día no pase desapercibido para ti ya que te lo mereces.</p>
                 <p>Que sepas que no quiero que te sientas comprometida a nada y no tienes que hacer nada por mi, lo cree desde 0 con la mejor intención del mundo y espero que haya sido de tu agrado.</p>
+                <p>Espero que te guste y que, aunque sea por un momento, te saque una sonrisa.</p>
                 <p class="firma">Con cariño:<br>Ojos de Tapioca :)</p>
             </div>
         </div>
@@ -510,65 +509,42 @@
             }
         });
 
-        // ============================================
-        // --- 6. NUEVO: CRIATURAS EN LOS LATERALES ---
-        // ============================================
-
-        // SVGs de las criaturas (solo contorno)
+        // --- 6. CRIATURAS EN LOS LATERALES ---
         const axolotlSVG = `
         <svg viewBox="0 0 100 60" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <!-- Cuerpo -->
             <path d="M 25 32 Q 45 18 68 22 Q 82 24 88 32 Q 82 42 68 44 Q 45 48 25 36"/>
-            <!-- Cabeza -->
             <ellipse cx="82" cy="33" rx="14" ry="12"/>
-            <!-- Branquias (3 a cada lado) -->
             <path d="M 76 22 Q 68 10 60 8"/>
             <path d="M 79 21 Q 74 7 68 3"/>
             <path d="M 83 21 Q 82 6 84 2"/>
-            <!-- Ojo -->
             <circle cx="88" cy="30" r="2.5" fill="currentColor" stroke="none"/>
-            <!-- Sonrisa -->
             <path d="M 90 40 Q 93 42 95 40"/>
-            <!-- Cola -->
             <path d="M 25 32 Q 12 22 2 26 Q 8 33 2 42 Q 12 46 25 36"/>
-            <!-- Patitas -->
             <path d="M 42 42 L 38 52 L 46 52"/>
             <path d="M 68 43 L 65 52 L 73 52"/>
         </svg>`;
 
         const rabbitSVG = `
         <svg viewBox="0 0 80 80" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <!-- Cuerpo -->
             <ellipse cx="35" cy="55" rx="22" ry="16"/>
-            <!-- Cabeza -->
             <circle cx="52" cy="38" r="13"/>
-            <!-- Orejas -->
             <path d="M 46 28 Q 42 8 46 4 Q 50 8 50 28"/>
             <path d="M 54 28 Q 52 8 56 4 Q 60 8 58 28"/>
-            <!-- Ojo -->
             <circle cx="56" cy="36" r="1.8" fill="currentColor" stroke="none"/>
-            <!-- Nariz -->
             <circle cx="64" cy="40" r="1.5" fill="currentColor" stroke="none"/>
-            <!-- Bigotes -->
             <path d="M 64 42 L 72 44"/>
             <path d="M 64 40 L 72 40"/>
-            <!-- Colita -->
             <circle cx="15" cy="52" r="6"/>
-            <!-- Patitas -->
             <path d="M 45 68 L 45 76 L 38 76"/>
             <path d="M 28 68 L 28 76 L 21 76"/>
         </svg>`;
 
         const dragonflySVG = `
         <svg viewBox="0 0 100 60" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-            <!-- Cuerpo largo -->
             <line x1="15" y1="30" x2="85" y2="30"/>
-            <!-- Cabeza -->
             <circle cx="15" cy="30" r="4"/>
-            <!-- Ojitos -->
             <circle cx="13" cy="28" r="1" fill="currentColor" stroke="none"/>
             <circle cx="13" cy="32" r="1" fill="currentColor" stroke="none"/>
-            <!-- Alas (grupo animado) -->
             <g class="wings">
                 <path d="M 35 30 Q 40 10 55 5 Q 52 20 48 30"/>
                 <path d="M 55 30 Q 60 10 75 5 Q 72 20 68 30"/>
@@ -587,7 +563,7 @@
         function spawnCreature() {
             const type = creatureTypes[Math.floor(Math.random() * creatureTypes.length)];
             const side = Math.random() < 0.5 ? 'left' : 'right';
-            const top = 15 + Math.random() * 65; // Entre 15% y 80% de la altura
+            const top = 15 + Math.random() * 65;
 
             const el = document.createElement('div');
             el.className = `creature ${type} side-${side}`;
@@ -596,14 +572,11 @@
 
             document.body.appendChild(el);
 
-            // Duración de la animación + pequeño extra para eliminar del DOM
             const animDuration = parseFloat(getComputedStyle(el).animationDuration) * 1000;
             setTimeout(() => el.remove(), animDuration + 800);
         }
 
-        // Programador de aparición aleatoria
         function scheduleNextSpawn() {
-            // Aparece entre cada 4 y 9 segundos
             const nextIn = 4000 + Math.random() * 5000;
             setTimeout(() => {
                 spawnCreature();
@@ -611,7 +584,6 @@
             }, nextIn);
         }
 
-        // Primera criatura aparece a los 3 segundos de entrar a la página
         setTimeout(() => {
             spawnCreature();
             scheduleNextSpawn();
